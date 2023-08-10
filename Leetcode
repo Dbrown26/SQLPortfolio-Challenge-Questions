@@ -1,0 +1,268 @@
+Leetcode 175. Combine Two Tables
+Difficulty: Easy
+Concept(s) covered: Joins
+
+SELECT firstName, lastName, city, state
+FROM Person 
+LEFT JOIN Address
+ON Person.personId=Address.personId;
+
+------------------------------------
+
+Leetcode 181. Employees Earning More Than Their Managers
+Difficulty: Easy
+Concepts covered: Joins, filtering
+
+SELECT e.name AS Employee
+FROM Employee e
+INNER JOIN Employee m ON e.managerId = m.id
+WHERE e.salary > m.salary;
+
+------------------------------------
+
+Leetcode 182. Duplicate Emails
+Difficulty: Easy
+Concepts covered: Group By clause
+
+select email
+from Person
+GROUP BY email
+HAVING count(email) > 1;
+
+------------------------------------
+
+Leetcode 183. Customers Who Never Order
+Difficulty: Easy
+Concepts covered: Joins, filtering, null values
+
+SELECT c.name as Customers
+FROM Customers c
+LEFT JOIN Orders o
+ON c.id = o.customerId
+WHERE o.customerId is Null;
+
+------------------------------------
+
+Leetcode 180. Consecutive Numbers
+Difficulty: Medium
+Concepts covered: Window functions, filtering
+
+SELECT DISTINCT num as ConsecutiveNums
+FROM (
+  SELECT num,
+         LEAD(num) OVER (ORDER BY id) AS next_num,
+         LEAD(num, 2) OVER (ORDER BY id) AS next_next_num
+  FROM Logs
+) AS sub
+WHERE num = next_num AND num = next_next_num;
+
+------------------------------------
+
+Leetcode 197. Rising Temperature
+Difficulty: Easy
+Concepts covered: Joins, date data type
+
+SELECT w2.id
+FROM Weather w1
+join Weather w2
+ON DATEDIFF (w1.recordDate ,w2.recordDate ) = -1
+AND w2.temperature > w1.temperature;  
+
+------------------------------------
+
+Leetcode 577. Employee Bonus
+Difficulty: Easy
+Concepts covered: Joins, filtering
+
+select e.name , b.bonus
+from employee e
+left join bonus b 
+on e.empId = b.empId
+where bonus < 1000 or bonus is null;
+
+------------------------------------
+
+Leetcode 584. Find Customer Referee
+Difficulty: Easy
+Concepts covered: Filtering, null values
+
+SELECT name 
+FROM Customer
+WHERE referee_id != 2 or referee_id is null;
+
+------------------------------------
+
+Leetcode 586. Customer Placing the Largest Amount of Orders
+Difficulty: Easy
+Concepts covered: Aggregate functions, group by clause
+
+select customer_number
+from Orders 
+group by customer_number 
+order by count(customer_number) desc limit 1;
+
+------------------------------------
+
+Leetcode 596. Classes More Than 5 Students
+Difficulty: Easy
+Concepts covered: Group by and filtering with having clause
+
+Select class
+FROM courses
+GROUP BY class
+HAVING count(class) >= 5;
+
+------------------------------------
+
+Leetcode 178. Rank Scores
+Difficulty: Medium 
+Concepts covered: Window functions
+
+SELECT score, dense_rank() over(order by score DESC) as "rank"
+FROM scores;
+
+------------------------------------
+
+Leetcode 607. Sales Person
+Difficulty: Easy
+Concepts covered: Joins, subquery
+
+select name from SalesPerson
+where sales_id not in
+(select o.sales_id
+from Company c
+inner join Orders o
+on c.com_id = o.com_id
+where c.name = "RED")
+
+------------------------------------
+
+Leetcode 1068. Product Sales Analysis I
+Difficulty: Easy
+Concepts covered: Joins
+
+select product_name, year, price
+from sales s
+join product p
+on s.product_id = p.product_id;
+
+------------------------------------
+
+Leetcode 1075. Project Employees I
+Difficulty: Easy
+Concepts covered: Joins, aggregate functions, group by clause
+
+select p.project_id, ROUND(AVG(experience_years), 2) as average_years
+from project p
+join employee e 
+on p.employee_id = e.employee_id
+group by project_id;
+
+------------------------------------
+
+Leetcode 1148. Article Views I
+Difficulty: Easy
+Concepts covered: Filtering
+
+SELECT DISTINCT author_id AS id
+FROM Views
+WHERE author_id = viewer_id
+ORDER BY id;
+
+------------------------------------
+
+Leetcode 1211. Queries Quality and Percentage
+Difficulty: Easy
+Concepts covered: Aggregate functions, case when statement, group by clause
+
+select query_name, ROUND(AVG(rating / position), 2) as quality, 
+ROUND(SUM(CASE WHEN rating < 3 THEN 1 ELSE 0 END) / count(rating) * 100, 2) as poor_query_percentage
+from queries
+group by query_name;
+
+------------------------------------
+
+Leetcode 1378. Replace Employee ID With The Unique Identifier
+Difficulty: Easy
+Concepts covered: Joins
+
+select u.unique_id, e.name
+from EmployeeUNI u
+right join Employees e
+on u.id = e.id;
+
+------------------------------------
+
+Leetcode 1581. Customer Who Visited but Did Not Make Any Transactions
+Difficulty: Easy
+Concepts covered: Aggregate functions, joins, group by clause, filtering
+
+SELECT customer_id, count(customer_id) as count_no_trans
+FROM visits v
+left join transactions t
+on v.visit_id = t.visit_id
+where t.transaction_id is null
+group by customer_id;
+
+------------------------------------
+
+Leetcode 570. Managers with at Least 5 Direct Reports
+Difficulty: Medium
+Concepts covered: Self join, group by clause
+
+select a.name
+from employee a
+join employee b
+on a.id = b.managerId
+group by b.managerId
+having count(b.managerId) >= 5;
+
+------------------------------------
+
+Leetcode 1633. Percentage of Users Attended a Contest
+Difficulty: Easy 
+Concepts covered: Aggregate functions, joins, order by
+
+select contest_id, round(count(r.user_id) /  (select COUNT(*) FROM Users) * 100, 2) as percentage
+from users u
+join register r
+on u.user_id = r.user_id
+group by contest_id
+order by percentage DESC, contest_id ASC;
+
+------------------------------------
+
+Leetcode 1683. Invalid Tweets
+Difficulty: Easy
+Concepts covered: Length function, filtering
+
+select tweet_id
+from Tweets
+where CHAR_LENGTH(content) > 15;
+
+------------------------------------
+
+Leetcode 1661. Average Time of Process per Machine
+Difficulty: Easy 
+Concepts covered: CTEs, Aggregate functions, enum type, group by clause
+
+WITH ProcessTimes AS (
+    SELECT 
+        machine_id,
+        process_id,
+        MIN(CASE WHEN activity_type = 'start' THEN timestamp END) AS start_time,
+        MAX(CASE WHEN activity_type = 'end' THEN timestamp END) AS end_time
+    FROM activity
+    GROUP BY machine_id, process_id
+),
+AverageProcessingTime AS (
+    SELECT 
+        machine_id,
+        ROUND(AVG(end_time - start_time), 3) AS processing_time
+    FROM ProcessTimes
+    GROUP BY machine_id
+)
+SELECT 
+    machine_id,
+    processing_time
+FROM AverageProcessingTime;
