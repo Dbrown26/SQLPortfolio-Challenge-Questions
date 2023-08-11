@@ -1,0 +1,106 @@
+Stratascratch ID 9917. Average Salaries 
+Difficulty: Easy 
+Concepts covered: Window functions
+
+select department, first_name, salary, avg(salary) over (partition by department) as dept_salary 
+from employee;
+
+------------------------------------------
+
+Stratascratch ID 10176. Bikes Last Used
+Difficulty: Easy
+Concepts covered: Aggregate functions, group by clause
+
+select DISTINCT bike_number, MAX(end_time) from dc_bikeshare_q1_2012
+group by bike_number
+order by end_time DESC;
+
+------------------------------------------
+
+Stratascratch ID 2506. Number of Shipments per Month
+Difficulty: Easy
+Concepts covered: Date formatting, group by clause
+
+select DATE_FORMAT(shipment_date, '%Y-%m') AS yearMonth, count(*) as count from amazon_shipment
+group by MONTH(shipment_date);
+
+------------------------------------------
+
+Stratascratch ID 9991. Top Ranked Songs
+Difficulty: Medium
+Concepts covered: Aggregate functions, group by clause, filtering
+
+SELECT trackname, COUNT(position) as times_top1
+FROM spotify_worldwide_daily_song_ranking
+GROUP BY trackname, position
+HAVING position = 1
+ORDER BY COUNT(position) DESC;
+
+------------------------------------------
+
+Stratascratch ID 9847. Number of Workers by Department Starting in April or Later
+Difficulty: Easy
+Concepts covered: Date type, filtering, group by clause
+
+select department, count(worker_id) as num_workers
+from worker
+where MONTH(joining_date) = '04' or MONTH(joining_date) > '04'
+group by department;
+
+------------------------------------------
+
+Stratascratch ID 10166. Reviews of Hotel Arena
+Difficulty: Easy
+Concepts covered: Window function, filtering
+
+select distinct hotel_name, reviewer_score, count(*) OVER (partition by reviewer_score)
+from hotel_reviews
+where hotel_name = "Hotel Arena";
+
+------------------------------------------
+
+Stratascratch ID 9728. Number of Violations
+Difficulty: Medium
+Concepts covered: Aggregate functions, datetime type, group by, filtering
+
+select year(inspection_date) AS YEAR , count(violation_id) as n_inspections from sf_restaurant_health_violations
+group by year(inspection_date), business_name
+having business_name = 'Roxanne Cafe'
+order by year(inspection_date);
+
+------------------------------------------
+
+Stratascratch ID 9892. Second Highest Salary
+Difficulty: Medium
+Concepts covered: Window functions, filtering 
+
+select salary from
+    (select salary, rank() over(order by salary DESC) AS rnk
+    from employee) salary_rank
+where rnk = 2;
+
+------------------------------------------
+
+Stratascratch ID 9915. Highest Cost Orders
+Difficulty: Medium 
+Concepts covered: Aggregation functions, joins, datetime type, filtering, group by clause
+
+select first_name, order_date, sum(total_order_cost) as total_cost from customers c
+join orders o on c.id = o.cust_id
+where order_date BETWEEN '2019-02-01'  and '2019-05-01'
+group by cust_id, order_date
+order by total_cost DESC
+limit 1;
+
+------------------------------------------
+
+Stratascratch ID 2005. Share of Active Users
+Difficulty: Medium
+Concepts covered: Subquery, case when statement, aggregate functions, filtering
+
+select active_users_count / total_users_count as active_users_share
+from
+(select count(case when status = 'open' then 1 else null end) as active_users_count, count(user_id) as total_users_count 
+    from fb_active_users
+    where country = 'USA'
+    ) as user_counts;
