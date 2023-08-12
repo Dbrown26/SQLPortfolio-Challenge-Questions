@@ -1,0 +1,47 @@
+Hackerrank
+
+Weather Observation Station 3
+Difficulty: Easy
+Concepts covered: Filtering, mod function
+
+SELECT DISTINCT CITY
+FROM STATION
+WHERE mod(ID, 2) = 0;
+
+--------------------------------------------
+
+Weather Observation Station 5
+Difficulty: Intermediate
+Concepts covered: Union, length function
+
+(SELECT CITY, LENGTH(CITY)
+ FROM STATION
+ORDER BY LENGTH(CITY), CITY 
+LIMIT 1)
+UNION
+(SELECT CITY, LENGTH(CITY)
+ FROM STATION
+ORDER BY LENGTH(CITY) desc, CITY
+LIMIT 1)
+
+--------------------------------------------
+
+Weather Observation Station 6
+Difficulty: Easy
+Concepts covered: LIKE clause,  filtering
+
+SELECT DISTINCT CITY
+FROM STATION
+WHERE CITY LIKE 'a%' or CITY LIKE 'e%' or CITY LIKE 'i%' or CITY LIKE 'o%' or CITY LIKE 'u%';
+
+--------------------------------------------
+
+Weather Observation Station 8
+Difficulty: Easy
+Concepts covered: Regular expressions, filtering
+
+SELECT CITY
+FROM STATION
+WHERE CITY REGEXP '^[aeiou]' and CITY REGEXP '[aeiou]$'
+
+--------------------------------------------
