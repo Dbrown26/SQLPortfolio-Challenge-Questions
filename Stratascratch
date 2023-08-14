@@ -104,3 +104,14 @@ from
     from fb_active_users
     where country = 'USA'
     ) as user_counts;
+
+------------------------------------------
+
+Stratascratch ID 10353. Workers With The Highest Salaries
+Difficulty: Medium
+Concepts covered: Joins, subquery, filtering
+
+select worker_title from title t
+join worker w
+on w.worker_id = t.worker_ref_id
+where salary in (select max(salary) from worker);
