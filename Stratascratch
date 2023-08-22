@@ -38,6 +38,16 @@ ORDER BY COUNT(position) DESC;
 
 ------------------------------------------
 
+Stratascratch ID 9622. Number of Bedrooms and Bathrooms
+Difficulty: Easy
+Concepts covered: Aggregate functions, group by clause
+
+select city, property_type, AVG(bathrooms) as n_bathrooms_avg, AVG(bedrooms) as n_bedrooms_avg 
+from airbnb_search_details
+group by city, property_type;
+
+------------------------------------------
+
 Stratascratch ID 9847. Number of Workers by Department Starting in April or Later
 Difficulty: Easy
 Concepts covered: Date type, filtering, group by clause
@@ -115,3 +125,14 @@ select worker_title from title t
 join worker w
 on w.worker_id = t.worker_ref_id
 where salary in (select max(salary) from worker);
+
+------------------------------------------
+
+Stratascratch ID 9653. Count the number of user events performed by MacBookPro users
+Difficulty: Easy
+Concepts covered: Aggregate functions, group by clause, filtering
+
+select event_name, count(*) as event_count from playbook_events
+where device = 'macbook pro'
+group by event_name
+order by event_count DESC;
