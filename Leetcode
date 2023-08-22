@@ -266,3 +266,17 @@ SELECT
     machine_id,
     processing_time
 FROM AverageProcessingTime;
+
+------------------------------------
+Leetcode 176. Second Highest Salary
+Difficulty:Medium
+Concepts covered: Case when, window functions, subquery
+
+SELECT 
+    CASE WHEN MAX(SalaryRank) = 1 THEN NULL ELSE MAX(Salary) END AS SecondHighestSalary
+FROM
+(
+    SELECT *, RANK() OVER(ORDER BY Salary) AS SalaryRank
+    FROM Employee 
+) AS sub
+WHERE SalaryRank = 2;
